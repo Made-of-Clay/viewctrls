@@ -4,7 +4,8 @@
   "description": "jQuery widget for controls bound to a view/container",
   "main": "dist/js/viewctrls.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ls -la",
+    "buildjs": "node_modules/.bin/babel src/scripts/viewctrls.js -o dist/js/viewctrls.js"
   },
   "repository": {
     "type": "git",
@@ -17,10 +18,11 @@
   },
   "homepage": "https://github.com/Made-of-Clay/viewctrls#readme",
   "dependencies": {
-    "jquery": "^2.2.4",
-    "jquery-ui": "^1.10.5"
+    "jquery": "^2.2.4"
   },
   "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
     "mocha": "^2.5.3"
   }
