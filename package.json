@@ -1,0 +1,23 @@
+{
+  "name": "viewctrls",
+  "version": "1.0.0",
+  "description": "jQuery widget for controls bound to a view/container",
+  "main": "viewctrls.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Made-of-Clay/viewctrls.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Made-of-Clay/viewctrls/issues"
+  },
+  "homepage": "https://github.com/Made-of-Clay/viewctrls#readme",
+  "dependencies": {
+    "jquery": "^2.2.4",
+    "jquery-ui": "^1.10.5"
+  }
+}
