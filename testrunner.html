@@ -11,15 +11,12 @@
   <script src="node_modules/chai/chai.js"></script>
   <script>
     mocha.ui('bdd');
+    expect = chai.expect;
   </script>
-  <script src="src/scripts/mycode.js"></script>
-  <script src="test/mycode.js"></script>
-  <script>
-    if (window.mochaPhantomJS) {
-      mochaPhantomJS.run();
-    } else {
-      mocha.run();
-    }
-  </script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="dist/js/jquery-ui.min.js"></script> <!-- core and widget only -->
+  <script src="dist/js/viewctrls.js"></script>
+  <script src="test/viewctrls.js"></script>
+  <script> mocha.run(); </script>
 </body>
 </html>
