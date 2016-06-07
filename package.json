@@ -2,7 +2,7 @@
   "name": "viewctrls",
   "version": "1.0.0",
   "description": "jQuery widget for controls bound to a view/container",
-  "main": "viewctrls.js",
+  "main": "dist/js/viewctrls.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,9 @@
   "dependencies": {
     "jquery": "^2.2.4",
     "jquery-ui": "^1.10.5"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
   }
 }
