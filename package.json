@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "description": "jQuery widget for controls bound to a view/container",
   "main": "dist/js/viewctrls.js",
+  "_holding-tank": {
+    "_note": "this object is for properties that need tmp moved",
+    "build": "npm run build:js && npm run build:css",
+    "test": "mocha-phantomjs testrunner.html",
+    "_endnote": "added this just so I don't worry about trailing commas"
+  },
   "scripts": {
-    "test": "ls -la",
-    "buildjs": "node_modules/.bin/babel src/scripts/viewctrls.js -o dist/js/viewctrls.js"
+    "build": "parallelshell 'npm run build:js' 'npm run build:css'",
+    "build:js": "node_modules/.bin/babel src/scripts/viewctrls.js -w -o dist/js/viewctrls.js",
+    "build:css": "sass --watch src/styles/styles.scss:dist/css/styles.css",
+    "test": "mocha testrunner.html"
   },
   "repository": {
     "type": "git",
@@ -24,6 +32,7 @@
     "babel-cli": "^6.9.0",
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "parallelshell": "^2.0.0"
   }
 }
