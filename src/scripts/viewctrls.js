@@ -1,16 +1,31 @@
+////////////////////////////////////////////
+/////////////// USING BABEL ////////////////
+////////////////////////////////////////////
+/**
+ * viewctrls plugin adds small button-like elements (controls) to the element initializing the plugin
+ * The controls are defined using the "controls" option
+ * @example - a Refresh control that refreshes the page in 5 seconds
+    elem.viewctrls({
+        controls: {
+            Refresh: {
+                icon: 'icon-refresh', // HTML class name
+                func: function(elem, sec) { refreshPage(sec); }, // see func note below
+                args: [5] // passed to func
+            }
+        }
+   });
+ * options.controls - Properties of a given control object are as follows:
+ *   .icon: an HTML class (string) or DOM element to be added as the icon (optional)
+ *   .func: callback function or method to run when the control is clicked
+ *   .thisArg: passed "this" reference for the "func" function (optional)
+ *   .label: alternative text to display onHover of control (optional)
+ * options.capitalizeLabels - boolean flag specifying whether or not to add class to capitalize the control labels
+ */
 (function addToWidgetFactory($) {
-    // widget goes in here
-    // define object
-    // init widget at bottom
     var vcwidget = {
         options: {
             capitalizeLabels: false,
-            controls: {},
-            // controls: {
-            //    callback: function() {} // or
-            //    callback: someMethod,
-            //    context: someObject
-            // }
+            controls: {}
         },
 
         _addWrapper: _addWrapper,
@@ -30,9 +45,6 @@
         }
     }
     /**
-     * [checkControlsType description]
-     * @param  {[type]} controls [description]
-     * @return {[type]}          [description]
      * @internal
      */
     function checkControlsType(controls) {
@@ -47,9 +59,6 @@
         }
     }
     /**
-     * [objIsEmpty description]
-     * @param  {[type]} obj [description]
-     * @return {[type]}     [description]
      * @internal
      */
     function objIsEmpty(obj) {
@@ -66,39 +75,22 @@
         var plugin = this;
         var wrapper = plugin._addWrapper();
         var $btns = $();
+        var capLabels = plugin.options.capitalizeLabels;
 
         for(let key in plugin.options.controls) {
             let control = plugin.options.controls[key];
-
-            // make span w/ class & title
+            let capClass = capLabels ? 'proper-case' : '';
             var ctrl = $('<span>', {
-                class: 'viewctrl',
-                title: key
+                class: `viewctrl ${capClass}`,
+                // title: key
+                'data-label': key
             });
-            // add icon (if applicable)
-            if(control.icon) {
-                var iconClass = 'viewctrl-icon';
-                var iconEl;
-                // string
-                if(isString(control.icon)) {
-                    iconEl = $('<span>', { class:`${control.icon} ${iconClass}` });
-                }
-                // // obj/elem
-                if(typeof control.icon === 'object') {
-                    let icon = control.icon instanceof jQuery ? control.icon.get(0) : control.icon;
-                    if(isDomEl(icon)) {
-                        iconEl = $(icon).addClass(iconClass);
-                    } else {
-                        console.warn('The passed icon is not a DOM element node');
-                    }
-                }
-                // if(iconEl === undefined) {
-                //     throw new TypeError('That icon passed must either be a string (class name) or DOM element: passed type was ' + typeof control.icon);
-                // }
+
+            var iconEl = checkIcon(control.icon);
+            if(iconEl !== null) {
                 ctrl.append(iconEl);
             }
-            // add click listener
-            // add to wrapper
+            addListener(ctrl, control);
             $btns = $btns.add(ctrl);
         }
         wrapper.append($btns);
@@ -107,6 +99,32 @@
         var wrapper = $('<div>', { class:'viewctrls_wrapper' });
         this.element.append(wrapper);
         return wrapper;
+    }
+    function checkIcon(icon) {
+        var elem = null;
+        if(!isEmpty(icon)) {
+            icon = (icon instanceof jQuery) ? icon.get(0) : icon;
+            var iconClass = 'viewctrl-icon';
+
+            if(isString(icon)) {
+                elem = $('<span>', { class:`${icon} ${iconClass}` });
+            } else if(isObject(icon) && isDomEl(icon)) {
+                elem = $(icon).addClass(iconClass);
+            } else {
+                let typeErrMsg = `That icon passed must either be a string (class name) or DOM element: passed type was "${typeof icon}"`;
+                throw new TypeError(typeErrMsg);
+            }
+        }
+        return elem;
+    }
+    function addListener(elem, opts) {
+        var thisArg = !isEmpty(opts.thisArg) ? opts.thisArg : window;
+        var baseArg = [elem];
+        var args = !isEmpty(opts.args) ? baseArg.concat(opts.args) : baseArg;
+
+        $(elem).click(function viewctrlClkd() {
+            opts.func.apply(thisArg, args);
+        });
     }
 
     function _destroy() {
@@ -124,5 +142,27 @@
     }
     function isDomEl(toCheck) {
         return parseInt(toCheck.nodeType) === 1;
+    }
+    function isObject(toCheck) {
+        return typeof toCheck === 'object';
+    }
+    function isEmpty(mixed_var) {
+        var undef, key, i, len;
+        var emptyValues = [undef, null, false, 0, '', '0'];
+
+        for (i = 0, len = emptyValues.length; i < len; i++) {
+            if (mixed_var === emptyValues[i]) {
+                return true;
+            }
+        }
+
+        if (typeof mixed_var === 'object') {
+            for (key in mixed_var) {
+                return false;
+            }
+            return true;
+        }
+
+        return false;
     }
 })(jQuery);

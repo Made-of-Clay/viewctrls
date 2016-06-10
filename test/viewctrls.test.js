@@ -78,14 +78,6 @@ describe('viewctrls', function () {
             }
             expect(hasProps).to.be.true;
         });
-        // it('should throw derp error', function (done) {
-            // var inst = vc.data('moc-viewctrls');
-            // expect(function() {
-            //     inst.derp();
-            // }).to.throw(Error);
-            // // expect(inst.derp()).to.be.false;
-            // done();
-        // });
         it('should have control(s) with at least a "func" callback', function() {
             var controls = vc.data('moc-viewctrls').options.controls;
 
@@ -103,12 +95,32 @@ describe('viewctrls', function () {
             vc.viewctrls(getInitObj());
             var wrapper = vc.children('.viewctrls_wrapper');
             assert.isAbove(wrapper.length, 0, 'wrapper does not exist in selection');
-        })
+        });
         it('should be visible', function() {
             vc.viewctrls(getInitObj());
             var firstCtrl = vc.find('.viewctrl').get(0);
             expect(firstCtrl).to.exist;
             expect($(firstCtrl).is(':visible')).to.be.true;
+        });
+        it('should add a special class (e.g. "proper-case") when flag is set', function() {
+            var properCaseClass = 'proper-case';
+            destroyVc();
+            var initObj = getInitObj();
+            initObj.capitalizeLabels = true;
+            vc.viewctrls(initObj);
+            firstCtrl = getFirstCtrl();
+
+            expect($(firstCtrl).hasClass(properCaseClass)).to.be.true;
+        });
+        it('should set attribute for displaying the control label', function() {
+            destroyVc();
+            var initObj = getInitObj();
+            var testLabel = 'Edit that shizzle';
+            initObj.controls.Edit.label = testLabel;
+            vc.viewctrls(initObj);
+            firstCtrl = getFirstCtrl();
+
+            expect($(firstCtrl).data('label')).to.equal(testLabel);
         });
         it('should have icon class when passed', function() {
             destroyVc();
@@ -133,20 +145,62 @@ describe('viewctrls', function () {
             // test features of passed element to find match (i.e. didn't just use plugin's span)
             expect($(icon).data('icon')).to.equal('fake-icon');
         });
+        it('should throw an error if passed icon is not string or DOM element', function(done) {
+            destroyVc();
+            var initObj = getInitObj();
+            initObj.controls.Edit.icon = [1];
+            var badIconErr = function() { vc.viewctrls(initObj) };
+            expect(badIconErr).to.throw(TypeError);
+            done();
+        });
     });
 
     describe('DOM events', function () {
-        it('should return foo when clicked'/*, function() {
+        beforeEach(function() {
             destroyVc();
+        });
+        it('should run basic function', function() {
+            // destroyVc();
             var initObj = getInitObj();
-            initObj.controls.Edit.func = function() { return 'foo'; };
+            var foo;
+            var fooVal = 'bar';
+            initObj.controls.Edit.func = function(elem) { foo = fooVal; };
             vc.viewctrls(initObj);
 
-            var firstCtrl = vc.find('.viewctrl');
-        }*/);
-        it('should return property of parent object context'/*, function() {
-            // body...
-        }*/);
+            var firstCtrl = vc.find('.viewctrl').first();
+            firstCtrl.click(); // should add class
+            expect(foo).to.equal(fooVal);
+        });
+        it('should set data-foo on clicked element using foo property (baz)', function() {
+            var initObj = getInitObj();
+            var fooVal = 'bar';
+            var obj = {
+                foo: 'baz',
+                setFoo: function(elem) { 
+                    elem.attr('data-foo', this.foo);
+                }
+            };
+            initObj.controls.Edit.func = obj.setFoo;
+            initObj.controls.Edit.thisArg = obj;
+            vc.viewctrls(initObj);
+            var firstCtrl = vc.find('.viewctrl').first();
+            firstCtrl.click();
+
+            expect(firstCtrl.data('foo')).to.equal(obj.foo);
+        });
+        it('should use passed argument in callback function (data-foo = fooArg)', function () {
+            var initObj = getInitObj();
+            var argFoo = 'bar';
+            initObj.controls.Edit.func = function(elem, foo) {
+                elem.attr('data-foo', foo);
+            };
+            initObj.controls.Edit.args = [argFoo];
+            vc.viewctrls(initObj);
+            var firstCtrl = getFirstCtrl();
+            firstCtrl.click();
+
+            expect(firstCtrl.data('foo')).to.equal(argFoo);
+        });
     });
 
     /**
@@ -162,5 +216,8 @@ describe('viewctrls', function () {
                 }
             }
         };
+    }
+    function getFirstCtrl() {
+        return vc.find('.viewctrl').first();
     }
 });
