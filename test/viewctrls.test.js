@@ -165,6 +165,8 @@ describe('viewctrls', function () {
             expect(badIconErr).to.throw(TypeError);
             done();
         });
+        it('should accept specified element tag name');
+        it('should add specified attributes');
     });
 
     describe('DOM events', function () {

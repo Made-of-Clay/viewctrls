@@ -11,7 +11,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * @example - a Refresh control that refreshes the page in 5 seconds
     elem.viewctrls({
         controls: {
-            Refresh: {
+            refresh: {
+                label: 'Refresh in 5s',
                 icon: 'icon-refresh', // HTML class name
                 func: function(elem, sec) { refreshPage(sec); }, // see func note below
                 args: [5] // passed to func
