@@ -2,7 +2,6 @@ describe('viewctrls', function () {
     var vc;
 
     before(function() {
-    // beforeEach(function() {
         vc = $('#vc');
     });
 
@@ -12,10 +11,6 @@ describe('viewctrls', function () {
         }
     }
 
-    //////////////////
-    // the 2 following tests don't work together - the thrown error seems to
-    // stop all following tests from running (error not being caught?)
-    //////////////////
     describe('initializing widget with bad controls', function () {
         afterEach(function() {
             destroyVc();
@@ -27,8 +22,6 @@ describe('viewctrls', function () {
             };
             expect(wrongTypeInit.bind(vc)).to.throw(TypeError);
         });
-    // });
-    // describe('initializing widget without controls', function () {
         it('should throw an error if no controls are passed', function(done) {
             var initNoCtrls = function() { vc.viewctrls(); };
             expect(initNoCtrls.bind(vc)).to.throw(Error);
@@ -96,8 +89,9 @@ describe('viewctrls', function () {
     });
 
     describe('elements', function () {
-        // beforeEach(function() {
-        // });
+        beforeEach(function() {
+            destroyVc();
+        });
 
         it('should be wrapped by .viewctrls-wrapper', function () {
             vc.viewctrls(getInitObj());
@@ -112,7 +106,6 @@ describe('viewctrls', function () {
         });
         it('should add a special class (e.g. "proper-case") when flag is set', function() {
             var properCaseClass = 'proper-case';
-            destroyVc();
             var initObj = getInitObj();
             initObj.capitalizeLabels = true;
             vc.viewctrls(initObj);
@@ -120,8 +113,23 @@ describe('viewctrls', function () {
 
             expect($(firstCtrl).hasClass(properCaseClass)).to.be.true;
         });
+        it('should all have custom class when specified', function() {
+            var initObj = getInitObj();
+            var custCtrlClass = 'amazo-btn';
+            initObj.controlClass = custCtrlClass;
+            initObj.controls.adam = { func:$.noop };
+            vc.viewctrls(initObj);
+            var allHaveClass = true;
+
+            vc.find('.viewctrl').each(function(inx, elem) {
+                if(!$(elem).hasClass(custCtrlClass)) {
+                    allHaveClass = false;
+                }
+            });
+
+            expect(allHaveClass).to.be.true;
+        })
         it('should set attribute for displaying the control label', function() {
-            destroyVc();
             var initObj = getInitObj();
             var testLabel = 'Edit that shizzle';
             initObj.controls.Edit.label = testLabel;
@@ -131,7 +139,6 @@ describe('viewctrls', function () {
             expect($(firstCtrl).data('label')).to.equal(testLabel);
         });
         it('should have icon class when passed', function() {
-            destroyVc();
             var iconName = 'icon-edit';
             var initObj = getInitObj();
             initObj.controls.Edit.icon = iconName;
@@ -142,7 +149,6 @@ describe('viewctrls', function () {
             expect(icon.hasClass(iconName)).to.be.true;
         });
         it('should have icon element as was passed', function() {
-            destroyVc();
             var initObj = getInitObj();
             var el = $('<i>', {'data-icon':'fake-icon'});
             initObj.controls.Edit.icon = el;
@@ -150,11 +156,9 @@ describe('viewctrls', function () {
 
             var firstCtrl = vc.find('.viewctrl');
             var icon = firstCtrl.first().children();
-            // test features of passed element to find match (i.e. didn't just use plugin's span)
             expect($(icon).data('icon')).to.equal('fake-icon');
         });
         it('should throw an error if passed icon is not string or DOM element', function(done) {
-            destroyVc();
             var initObj = getInitObj();
             initObj.controls.Edit.icon = [1];
             var badIconErr = function() { vc.viewctrls(initObj) };
@@ -168,7 +172,6 @@ describe('viewctrls', function () {
             destroyVc();
         });
         it('should run basic function', function() {
-            // destroyVc();
             var initObj = getInitObj();
             var foo;
             var fooVal = 'bar';

@@ -24,6 +24,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  *   .thisArg: passed "this" reference for the "func" function (optional)
  *   .label: alternative text to display onHover of control (optional)
  * options.capitalizeLabels - boolean flag specifying whether or not to add class to capitalize the control labels
+ * options.controlClass - string (optionally space-separated if multiples) to add to all viewctrl controls
+ * options.wrapperClass - string (optionally space-separated if multiples) to add to the wrapper element
  */
 (function addToWidgetFactory($) {
     var vcwidget = {
@@ -91,13 +93,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var wrapper = plugin._addWrapper();
         var $btns = $();
         var capLabels = plugin.options.capitalizeLabels;
+        var custCtrlClass = plugin.options.controlClass;
 
         for (var key in plugin.options.controls) {
             var control = plugin.options.controls[key];
             var capClass = capLabels ? 'proper-case' : '';
+            var ctrlClass = isString(custCtrlClass) && !isEmpty(custCtrlClass) ? custCtrlClass : '';
             var label = labelCheck(key, control);
             var ctrl = $('<span>', {
-                class: 'viewctrl ' + capClass,
+                class: 'viewctrl ' + capClass + ' ' + ctrlClass,
                 // title: key
                 'data-label': label
             });
@@ -115,12 +119,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @method
      */
     function _addWrapper() {
-        var wrapClass = buildClasses('viewctrls-wrapper', this.options.wrapperClass);
+        var wrapClass = buildWrapClasses('viewctrls-wrapper', this.options.wrapperClass);
         var wrapper = $('<div>', { class: wrapClass });
         this.element.append(wrapper);
         return wrapper;
     }
-    function buildClasses(base, opts) {
+    /**
+     * @internal
+     */
+    function buildWrapClasses(base, opts) {
         var strClass = base;
         if (isString(opts)) {
             strClass += ' ' + opts;
