@@ -91,9 +91,9 @@ describe('viewctrls', function () {
         // beforeEach(function() {
         // });
 
-        it('should be wrapped by .viewctrls_wrapper', function () {
+        it('should be wrapped by .viewctrls-wrapper', function () {
             vc.viewctrls(getInitObj());
-            var wrapper = vc.children('.viewctrls_wrapper');
+            var wrapper = vc.children('.viewctrls-wrapper');
             assert.isAbove(wrapper.length, 0, 'wrapper does not exist in selection');
         });
         it('should be visible', function() {

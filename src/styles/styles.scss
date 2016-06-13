@@ -1,3 +1,73 @@
+@import 'bourbon/bourbon';
+
 .viewctrls {
-    color: red;
+    position: relative;
+
+    &-wrapper {
+        border: 1px solid #777;
+        border-radius: 3px;
+        box-shadow: 0 0 1px 1px white inset;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+    }
+}
+.viewctrl {
+    @include linear-gradient(#ddd, #bbb);
+    border-right: 1px solid white;
+    box-shadow: -1px 0 0 #999 inset;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.25em;
+    position: relative;
+    transition: background-color 0.3s;
+    vertical-align: middle;
+
+    &:last-child {
+        border-right: none;
+        box-shadow: none;
+    }
+    &:hover {
+        background-color: white;
+    }
+
+    $vc-lbl-color: #444;
+    @at-root {
+        %vc-btn {
+            color: #ccc;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            text-shadow: 1px 1px 0 solid;
+            text-transform: capitalize;
+            transition: opacity 0.3s;
+        }
+        %vc-hover-btn {
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+    &:before {
+        @extend %vc-btn;
+        @extend %vc-hover-btn;
+        border: 7px solid;
+        border-color: transparent transparent $vc-lbl-color;
+        bottom: -6px;
+        content: '';
+        right: 7px;
+        @include size(0);
+    }
+    &:after {
+        @extend %vc-btn;
+        @extend %vc-hover-btn;
+        background-color: $vc-lbl-color;
+        content: attr(data-label);
+        line-height: 1;
+        padding: 0.35em 0.45em;
+        right: 0;
+        text-align: center;
+        top: 125%;
+        white-space: nowrap;
+    }
 }
