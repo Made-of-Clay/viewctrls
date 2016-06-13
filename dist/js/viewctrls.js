@@ -32,6 +32,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             controls: {}
         },
 
+        /**
+         * @memberOf viewctrls
+         */
         _addWrapper: _addWrapper,
         _buildCtrls: _buildCtrls,
         _checkOptions: _checkOptions,
@@ -43,6 +46,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.element.addClass('viewctrls');
         this._checkOptions();
     }
+    /**
+     * @method
+     */
     function _checkOptions() {
         if (checkControlsType(this.options.controls)) {
             this._buildCtrls();
@@ -75,6 +81,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return isEmpty;
     }
+    /**
+     * @method
+     */
     function _buildCtrls() {
         var plugin = this;
         var wrapper = plugin._addWrapper();
@@ -84,10 +93,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         for (var key in plugin.options.controls) {
             var control = plugin.options.controls[key];
             var capClass = capLabels ? 'proper-case' : '';
+            var label = labelCheck(key, control);
             var ctrl = $('<span>', {
                 class: 'viewctrl ' + capClass,
                 // title: key
-                'data-label': key
+                'data-label': label
             });
 
             var iconEl = checkIcon(control.icon);
@@ -99,11 +109,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         wrapper.append($btns);
     }
+    /**
+     * @method
+     */
     function _addWrapper() {
         var wrapper = $('<div>', { class: 'viewctrls_wrapper' });
         this.element.append(wrapper);
         return wrapper;
     }
+    /**
+     * @internal
+     */
+    function labelCheck(key, opts) {
+        if (!isEmpty(opts.label)) {
+            if (isString(opts.label)) {
+                return opts.label;
+            } else {
+                console.warn('option.label was not a string - defaulting to key');
+                return key;
+            }
+        } else {
+            return key;
+        }
+    }
+    /**
+     * @internal
+     */
     function checkIcon(icon) {
         var elem = null;
         if (!isEmpty(icon)) {
@@ -121,6 +152,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return elem;
     }
+    /**
+     * @internal
+     */
     function addListener(elem, opts) {
         var thisArg = !isEmpty(opts.thisArg) ? opts.thisArg : window;
         var baseArg = [elem];
