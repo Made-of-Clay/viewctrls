@@ -25,7 +25,9 @@
     var vcwidget = {
         options: {
             capitalizeLabels: false,
-            controls: {}
+            controls: {},
+            controlClass: '',
+            wrapperClass: ''
         },
 
         /**
@@ -109,9 +111,17 @@
      * @method
      */
     function _addWrapper() {
-        var wrapper = $('<div>', { class:'viewctrls_wrapper' });
+        var wrapClass = buildClasses('viewctrls-wrapper', this.options.wrapperClass);
+        var wrapper = $('<div>', { class:wrapClass });
         this.element.append(wrapper);
         return wrapper;
+    }
+    function buildClasses(base, opts) {
+        var strClass = base;
+        if(isString(opts)) {
+            strClass += ' ' + opts;
+        }
+        return strClass;
     }
     /**
      * @internal

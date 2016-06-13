@@ -64,6 +64,14 @@ describe('viewctrls', function () {
         it('should have widget-specific class', function() {
             expect(vc.hasClass('viewctrls')).to.be.true;
         });
+        it('should add custom wrapper class when passed', function() {
+            destroyVc();
+            var initObj = getInitObj();
+            var custClass = 'some_WRapper foo';
+            initObj.wrapperClass = custClass;
+            vc.viewctrls(initObj);
+            expect(vc.find('.viewctrls-wrapper').hasClass(custClass)).to.be.true;
+        });
         it('should have at least one object in options.controls', function() {
             var inst = vc.data('moc-viewctrls');
             var hasProps = false;
