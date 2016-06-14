@@ -217,8 +217,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var thisArg = !isEmpty(opts.thisArg) ? opts.thisArg : window;
         var baseArg = [elem];
         var args = !isEmpty(opts.args) ? baseArg.concat(opts.args) : baseArg;
-        console.clear();
-        console.log('opts', opts);
+
         $(elem).click(function viewctrlClkd() {
             opts.func.apply(thisArg, args);
         });
