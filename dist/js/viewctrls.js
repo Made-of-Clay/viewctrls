@@ -24,6 +24,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  *   .func: callback function or method to run when the control is clicked
  *   .thisArg: passed "this" reference for the "func" function (optional)
  *   .label: alternative text to display onHover of control (optional)
+ *   .attr: map of attributes to add to the control; specifying "class" will append the value to existing class attribute, but others overwrite (optional)
  * options.capitalizeLabels - boolean flag specifying whether or not to add class to capitalize the control labels
  * options.controlClass - string (optionally space-separated if multiples) to add to all viewctrl controls
  * options.wrapperClass - string (optionally space-separated if multiples) to add to the wrapper element
@@ -46,6 +47,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         _create: _create,
         _destroy: _destroy
     };
+
+    $.widget('moc.viewctrls', vcwidget);
 
     function _create() {
         this.element.addClass('viewctrls');
@@ -154,6 +157,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return key;
         }
     }
+    /**
+     * @internal
+     */
     function checkTag(tag) {
         var okayTags = ['div', 'span', 'a', 'b', 'i', 'strong', 'em', 'button'];
         if (!isEmpty(tag)) {
@@ -165,6 +171,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return 'span'; // default
     }
+    /**
+     * @internal
+     */
     function mergeAtts(def, cust) {
         var newAtts = $.extend({}, def);
 
@@ -216,8 +225,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.element.removeClass('viewctrls').html('');
     }
 
-    $.widget('moc.viewctrls', vcwidget);
-
     // Utility Functions
     function isString(toCheck) {
         return typeof toCheck === 'string';
@@ -248,3 +255,5 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return false;
     }
 })(jQuery);
+
+//# sourceURL=viewctrls.js

@@ -20,6 +20,7 @@
  *   .func: callback function or method to run when the control is clicked
  *   .thisArg: passed "this" reference for the "func" function (optional)
  *   .label: alternative text to display onHover of control (optional)
+ *   .attr: map of attributes to add to the control; specifying "class" will append the value to existing class attribute, but others overwrite (optional)
  * options.capitalizeLabels - boolean flag specifying whether or not to add class to capitalize the control labels
  * options.controlClass - string (optionally space-separated if multiples) to add to all viewctrl controls
  * options.wrapperClass - string (optionally space-separated if multiples) to add to the wrapper element
@@ -42,6 +43,8 @@
         _create: _create,
         _destroy: _destroy
     };
+
+    $.widget('moc.viewctrls', vcwidget);
 
     function _create() {
         this.element.addClass('viewctrls');
@@ -150,6 +153,9 @@
             return key;
         }
     }
+    /**
+     * @internal
+     */
     function checkTag(tag) {
         var okayTags = ['div','span','a','b','i','strong','em','button'];
         if(!isEmpty(tag)) {
@@ -161,6 +167,9 @@
         }
         return 'span'; // default
     }
+    /**
+     * @internal
+     */
     function mergeAtts(def, cust) {
         var newAtts = $.extend({}, def);
 
@@ -213,8 +222,6 @@
         ;
     }
 
-    $.widget('moc.viewctrls', vcwidget);
-
     // Utility Functions
     function isString(toCheck) {
         return typeof toCheck === 'string';
@@ -245,3 +252,5 @@
         return false;
     }
 })(jQuery);
+
+//# sourceURL=viewctrls.js

@@ -30,6 +30,9 @@
     &:hover {
         background-color: white;
     }
+    &.proper-case {
+        text-transform: capitalize;
+    }
 
     $vc-lbl-color: #444;
     @at-root {
@@ -39,7 +42,6 @@
             opacity: 0;
             position: absolute;
             text-shadow: 1px 1px 0 solid;
-            text-transform: capitalize;
             transition: opacity 0.3s;
         }
         %vc-hover-btn {

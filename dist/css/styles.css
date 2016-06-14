@@ -25,13 +25,14 @@
     box-shadow: none; }
   .viewctrl:hover {
     background-color: white; }
+  .viewctrl.proper-case {
+    text-transform: capitalize; }
   .viewctrl:before, .viewctrl:after {
     color: #ccc;
     display: block;
     opacity: 0;
     position: absolute;
     text-shadow: 1px 1px 0 solid;
-    text-transform: capitalize;
     transition: opacity 0.3s; }
 
   .viewctrl:hover:before, .viewctrl:hover:after {
