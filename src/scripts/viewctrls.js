@@ -41,13 +41,18 @@
         _buildCtrls: _buildCtrls,
         _checkOptions: _checkOptions,
         _create: _create,
-        _destroy: _destroy
+        _init: _init,
+        _destroy: _destroy,
     };
 
     $.widget('moc.viewctrls', vcwidget);
 
     function _create() {
+        this.controls = {};
         this.element.addClass('viewctrls');
+    }
+
+    function _init() {
         this._checkOptions();
     }
     /**
@@ -95,8 +100,10 @@
         var capLabels = plugin.options.capitalizeLabels;
         var custCtrlClass = plugin.options.controlClass;
 
-        for(let key in plugin.options.controls) {
-            let control = plugin.options.controls[key];
+        $.extend(true, plugin.controls, plugin.options.controls);
+
+        for(let key in plugin.controls) {
+            let control = plugin.controls[key];
             let capClass = capLabels ? 'proper-case' : '';
             let ctrlClass = (isString(custCtrlClass) && !isEmpty(custCtrlClass)) ? custCtrlClass : '';
             let label = labelCheck(key, control);
@@ -105,10 +112,11 @@
             let defAtts = {
                 class: `viewctrl ${capClass} ${ctrlClass}`,
                 // title: key
-                'data-label': label
+                'data-label': label,
+                'data-key': key
             };
             let ctrlAtts = mergeAtts(defAtts, custAtts);
-            var ctrl = $(`<${tag}>`, ctrlAtts);
+            let ctrl = $(`<${tag}>`, ctrlAtts);
 
             var iconEl = checkIcon(control.icon);
             if(iconEl !== null) {
@@ -117,7 +125,7 @@
             addListener(ctrl, control);
             $btns = $btns.add(ctrl);
         }
-        wrapper.append($btns);
+        wrapper.html('').append($btns);
     }
     /**
      * @method
@@ -125,6 +133,7 @@
     function _addWrapper() {
         var wrapClass = buildWrapClasses('viewctrls-wrapper', this.options.wrapperClass);
         var wrapper = $('<div>', { class:wrapClass });
+        this.element.children('.viewctrls-wrapper').remove();
         this.element.append(wrapper);
         return wrapper;
     }

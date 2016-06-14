@@ -107,6 +107,12 @@ describe('viewctrls', function () {
             expect(firstCtrl).to.exist;
             expect($(firstCtrl).is(':visible')).to.be.true;
         });
+        it('should have an attribute containing the control init key', function() {
+            vc.viewctrls(initObj);
+            firstCtrl = getFirstCtrl();
+
+            expect(firstCtrl.data('key')).to.equal('edit');
+        });
         it('should add a special class (e.g. "proper-case") when flag is set', function() {
             var properCaseClass = 'proper-case';
             initObj.capitalizeLabels = true;
@@ -184,6 +190,22 @@ describe('viewctrls', function () {
             expect(firstCtrl.attr(custAttr)).to.equal(custAttrVal);
             expect(firstCtrl.hasClass(custClass)).to.be.true;
             expect(firstCtrl.hasClass('viewctrl')).to.be.true;
+        });
+        it('should append controls if container is already initialized', function () {
+            var reinit = $('<div>').appendTo(document.body);
+            reinit.viewctrls(initObj);
+            var newInitObj = {
+                controls: {
+                    'refresh': {
+                        func: function() {}
+                    }
+                }
+            };
+
+            reinit.viewctrls(newInitObj);
+
+            expect(reinit.find('.viewctrl:eq(0)').data('key')).to.equal('edit');
+            expect(reinit.find('.viewctrl:eq(1)').data('key')).to.equal('refresh');
         });
     });
 

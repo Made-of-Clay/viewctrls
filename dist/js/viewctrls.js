@@ -45,13 +45,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         _buildCtrls: _buildCtrls,
         _checkOptions: _checkOptions,
         _create: _create,
+        _init: _init,
         _destroy: _destroy
     };
 
     $.widget('moc.viewctrls', vcwidget);
 
     function _create() {
+        this.controls = {};
         this.element.addClass('viewctrls');
+    }
+
+    function _init() {
         this._checkOptions();
     }
     /**
@@ -99,8 +104,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var capLabels = plugin.options.capitalizeLabels;
         var custCtrlClass = plugin.options.controlClass;
 
-        for (var key in plugin.options.controls) {
-            var control = plugin.options.controls[key];
+        $.extend(true, plugin.controls, plugin.options.controls);
+
+        for (var key in plugin.controls) {
+            var control = plugin.controls[key];
             var capClass = capLabels ? 'proper-case' : '';
             var ctrlClass = isString(custCtrlClass) && !isEmpty(custCtrlClass) ? custCtrlClass : '';
             var label = labelCheck(key, control);
@@ -109,7 +116,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var defAtts = {
                 class: 'viewctrl ' + capClass + ' ' + ctrlClass,
                 // title: key
-                'data-label': label
+                'data-label': label,
+                'data-key': key
             };
             var ctrlAtts = mergeAtts(defAtts, custAtts);
             var ctrl = $('<' + tag + '>', ctrlAtts);
@@ -121,7 +129,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             addListener(ctrl, control);
             $btns = $btns.add(ctrl);
         }
-        wrapper.append($btns);
+        wrapper.html('').append($btns);
     }
     /**
      * @method
@@ -129,6 +137,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     function _addWrapper() {
         var wrapClass = buildWrapClasses('viewctrls-wrapper', this.options.wrapperClass);
         var wrapper = $('<div>', { class: wrapClass });
+        this.element.children('.viewctrls-wrapper').remove();
         this.element.append(wrapper);
         return wrapper;
     }
