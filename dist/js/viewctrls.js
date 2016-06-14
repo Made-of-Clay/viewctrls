@@ -101,11 +101,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var capClass = capLabels ? 'proper-case' : '';
             var ctrlClass = isString(custCtrlClass) && !isEmpty(custCtrlClass) ? custCtrlClass : '';
             var label = labelCheck(key, control);
-            var ctrl = $('<span>', {
+            var tag = checkTag(control.tag);
+            var custAtts = $.isPlainObject(control.attr) ? control.attr : {};
+            var defAtts = {
                 class: 'viewctrl ' + capClass + ' ' + ctrlClass,
                 // title: key
                 'data-label': label
-            });
+            };
+            var ctrlAtts = mergeAtts(defAtts, custAtts);
+            var ctrl = $('<' + tag + '>', ctrlAtts);
 
             var iconEl = checkIcon(control.icon);
             if (iconEl !== null) {
@@ -149,6 +153,31 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         } else {
             return key;
         }
+    }
+    function checkTag(tag) {
+        var okayTags = ['div', 'span', 'a', 'b', 'i', 'strong', 'em', 'button'];
+        if (!isEmpty(tag)) {
+            if ($.inArray(tag, okayTags) > -1) {
+                return tag;
+            } else {
+                console.warn('The tag passed (' + tag + ') was not an acceptable tag. Defaulting to "span". Please choose from the following options: ' + okayTags);
+            }
+        }
+        return 'span'; // default
+    }
+    function mergeAtts(def, cust) {
+        var newAtts = $.extend({}, def);
+        // loop through cust
+        for (var key in cust) {
+            if (key === 'class') {
+                // append value
+                newAtts[key] += ' ' + cust[key];
+            } else {
+                // append property
+                newAtts[key] = cust[key];
+            }
+        }
+        return newAtts;
     }
     /**
      * @internal

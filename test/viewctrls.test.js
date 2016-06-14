@@ -89,24 +89,26 @@ describe('viewctrls', function () {
     });
 
     describe('elements', function () {
+        var initObj;
+
         beforeEach(function() {
             destroyVc();
+            initObj = getInitObj();
         });
 
         it('should be wrapped by .viewctrls-wrapper', function () {
-            vc.viewctrls(getInitObj());
+            vc.viewctrls(initObj);
             var wrapper = vc.children('.viewctrls-wrapper');
             assert.isAbove(wrapper.length, 0, 'wrapper does not exist in selection');
         });
         it('should be visible', function() {
-            vc.viewctrls(getInitObj());
+            vc.viewctrls(initObj);
             var firstCtrl = vc.find('.viewctrl').get(0);
             expect(firstCtrl).to.exist;
             expect($(firstCtrl).is(':visible')).to.be.true;
         });
         it('should add a special class (e.g. "proper-case") when flag is set', function() {
             var properCaseClass = 'proper-case';
-            var initObj = getInitObj();
             initObj.capitalizeLabels = true;
             vc.viewctrls(initObj);
             firstCtrl = getFirstCtrl();
@@ -114,7 +116,6 @@ describe('viewctrls', function () {
             expect($(firstCtrl).hasClass(properCaseClass)).to.be.true;
         });
         it('should all have custom class when specified', function() {
-            var initObj = getInitObj();
             var custCtrlClass = 'amazo-btn';
             initObj.controlClass = custCtrlClass;
             initObj.controls.adam = { func:$.noop };
@@ -130,7 +131,6 @@ describe('viewctrls', function () {
             expect(allHaveClass).to.be.true;
         })
         it('should set attribute for displaying the control label', function() {
-            var initObj = getInitObj();
             var testLabel = 'Edit that shizzle';
             initObj.controls.Edit.label = testLabel;
             vc.viewctrls(initObj);
@@ -140,7 +140,6 @@ describe('viewctrls', function () {
         });
         it('should have icon class when passed', function() {
             var iconName = 'icon-edit';
-            var initObj = getInitObj();
             initObj.controls.Edit.icon = iconName;
             vc.viewctrls(initObj);
 
@@ -149,7 +148,6 @@ describe('viewctrls', function () {
             expect(icon.hasClass(iconName)).to.be.true;
         });
         it('should have icon element as was passed', function() {
-            var initObj = getInitObj();
             var el = $('<i>', {'data-icon':'fake-icon'});
             initObj.controls.Edit.icon = el;
             vc.viewctrls(initObj);
@@ -159,14 +157,34 @@ describe('viewctrls', function () {
             expect($(icon).data('icon')).to.equal('fake-icon');
         });
         it('should throw an error if passed icon is not string or DOM element', function(done) {
-            var initObj = getInitObj();
             initObj.controls.Edit.icon = [1];
             var badIconErr = function() { vc.viewctrls(initObj) };
             expect(badIconErr).to.throw(TypeError);
             done();
         });
-        it('should accept specified element tag name');
-        it('should add specified attributes');
+        it('should accept specified element tag name', function() {
+            var custTag = 'strong';
+            initObj.controls.Edit.tag = custTag;
+            vc.viewctrls(initObj);
+            var firstCtrl = getFirstCtrl();
+
+            expect(firstCtrl[0].nodeName.toLowerCase()).to.equal(custTag);
+        });
+        it('should add specified attributes', function() {
+            var custAttr = 'data-foo';
+            var custAttrVal = 'bar';
+            var custClass = 'adaman';
+            var attr = { class:custClass };
+            attr[custAttr] = custAttrVal;
+            initObj.controls.Edit.attr = attr;
+            vc.viewctrls(initObj);
+            var firstCtrl = getFirstCtrl();
+
+            expect(firstCtrl.is('['+custAttr+']')).to.be.true;
+            expect(firstCtrl.attr(custAttr)).to.equal(custAttrVal);
+            expect(firstCtrl.hasClass(custClass)).to.be.true;
+        });
+        it('should preserve existing attributes when adding custom attributes');
     });
 
     describe('DOM events', function () {
