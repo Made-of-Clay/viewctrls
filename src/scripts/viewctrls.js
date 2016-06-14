@@ -163,7 +163,7 @@
     }
     function mergeAtts(def, cust) {
         var newAtts = $.extend({}, def);
-        // loop through cust
+
         for(let key in cust) {
             if(key === 'class') { // append value
                 newAtts[key] += ' ' + cust[key];

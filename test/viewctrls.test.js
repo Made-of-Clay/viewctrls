@@ -170,7 +170,7 @@ describe('viewctrls', function () {
 
             expect(firstCtrl[0].nodeName.toLowerCase()).to.equal(custTag);
         });
-        it('should add specified attributes', function() {
+        it('should add specified attributes & preserve "class" attribute value', function() {
             var custAttr = 'data-foo';
             var custAttrVal = 'bar';
             var custClass = 'adaman';
@@ -183,8 +183,8 @@ describe('viewctrls', function () {
             expect(firstCtrl.is('['+custAttr+']')).to.be.true;
             expect(firstCtrl.attr(custAttr)).to.equal(custAttrVal);
             expect(firstCtrl.hasClass(custClass)).to.be.true;
+            expect(firstCtrl.hasClass('viewctrl')).to.be.true;
         });
-        it('should preserve existing attributes when adding custom attributes');
     });
 
     describe('DOM events', function () {

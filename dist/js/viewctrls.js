@@ -167,7 +167,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
     function mergeAtts(def, cust) {
         var newAtts = $.extend({}, def);
-        // loop through cust
+
         for (var key in cust) {
             if (key === 'class') {
                 // append value
