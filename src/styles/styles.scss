@@ -4,6 +4,7 @@
     position: relative;
 
     &-wrapper {
+        @include linear-gradient(#ddd, #bbb);
         border: 1px solid #777;
         border-radius: 3px;
         box-shadow: 0 0 1px 1px white inset;
@@ -13,7 +14,6 @@
     }
 }
 .viewctrl {
-    @include linear-gradient(#ddd, #bbb);
     border-right: 1px solid white;
     box-shadow: -1px 0 0 #999 inset;
     cursor: pointer;
