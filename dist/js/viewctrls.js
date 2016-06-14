@@ -212,12 +212,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @internal
      */
     function addListener(elem, opts) {
+        checkForFunc(opts);
+
         var thisArg = !isEmpty(opts.thisArg) ? opts.thisArg : window;
         var baseArg = [elem];
         var args = !isEmpty(opts.args) ? baseArg.concat(opts.args) : baseArg;
-
+        console.clear();
+        console.log('opts', opts);
         $(elem).click(function viewctrlClkd() {
             opts.func.apply(thisArg, args);
+        });
+    }
+    function checkForFunc(opts) {
+        if (opts.hasOwnProperty('func') && $.isFunction(opts.func)) {
+            return;
+        } else if (opts.hasOwnProperty('callback') && $.isFunction(opts.callback)) {
+            opts.func = opts.callback;
+        } else if (opts.hasOwnProperty('fn') && $.isFunction(opts.fn)) {
+            opts.func = opts.fn;
+        }
+
+        ['callback', 'fn'].forEach(function checkFuncAliases(alias) {
+            if (opts.hasOwnProperty(alias) && $.isFunction(opts[alias])) {
+                opts.func = opts[alias];
+            }
         });
     }
 
