@@ -12,7 +12,7 @@
   "scripts": {
     "build": "parallelshell 'npm run build:js' 'npm run build:css'",
     "build:js": "node_modules/.bin/babel src/scripts/viewctrls.js -w -o dist/js/viewctrls.js",
-    "build:css": "sass --watch src/styles/styles.scss:dist/css/styles.css",
+    "build:css": "sass --watch src/styles/styles.scss:dist/css/styles.css --style compressed",
     "test": "mocha testrunner.html"
   },
   "repository": {
