@@ -90,23 +90,6 @@ describe('viewctrls', function () {
             }
             expect(hasProps).to.be.true;
         });
-        // it('should have control(s) with at least a "func" callback', function() {
-        //     destroyVc();
-        //     vc.viewctrls({
-        //         controls: {
-        //             link: {}
-        //         }
-        //     });
-        //     var controls = vc.data('moc-viewctrls').controls;
-        //     var allHaveFunc = true;
-
-        //     for(var cmd in controls) {
-        //         if(!controls[cmd].hasOwnProperty('func')) {
-        //             allHaveFunc = false;
-        //         }
-        //     }
-        //     expect(allHaveFunc).to.be.true;
-        // });
     });
 
     describe('elements', function () {
