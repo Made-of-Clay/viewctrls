@@ -33,6 +33,7 @@
             controlClass: '',
             wrapperClass: ''
         },
+        // funcAliases: ['callback', 'fn'],
 
         /**
          * @memberOf viewctrls
@@ -59,7 +60,10 @@
      * @method
      */
     function _checkOptions() {
-        if(checkControlsType(this.options.controls)) {
+        var controlsSafe = checkControlsType(this.options.controls);
+        var callbackSafe = checkControlCallback(this.options.controls);
+
+        if(controlsSafe && callbackSafe) {
             this._buildCtrls();
         }
     }
@@ -89,6 +93,24 @@
             }
         }
         return isEmpty;
+    }
+    function checkControlCallback(controls) {
+        var funcList = ['func', 'fn', 'callback'];
+        for(let key in controls) {
+            let control = controls[key];
+            let matchInControl = false;
+
+            funcList.forEach(function(alias) {
+                if(control.hasOwnProperty(alias)) {
+                    matchInControl = true;
+                }
+            });
+
+            if(!matchInControl) {
+                throw new ReferenceError(`No callback was passed with the "${key}" object. Pass "func", "fn", or "callback" property in this control object`);
+            }
+        }
+        return true;
     }
     /**
      * @method
@@ -218,10 +240,10 @@
         checkForFunc(opts);
 
         var thisArg = !isEmpty(opts.thisArg) ? opts.thisArg : window;
-        var baseArg = [elem];
-        var args = !isEmpty(opts.args) ? baseArg.concat(opts.args) : baseArg;
 
-        $(elem).click(function viewctrlClkd() {
+        $(elem).click(function viewctrlClkd(event) {
+            var baseArg = [event];
+            var args = !isEmpty(opts.args) ? baseArg.concat(opts.args) : baseArg;
             opts.func.apply(thisArg, args);
         });
     }

@@ -37,6 +37,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             controlClass: '',
             wrapperClass: ''
         },
+        // funcAliases: ['callback', 'fn'],
 
         /**
          * @memberOf viewctrls
@@ -63,7 +64,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @method
      */
     function _checkOptions() {
-        if (checkControlsType(this.options.controls)) {
+        var controlsSafe = checkControlsType(this.options.controls);
+        var callbackSafe = checkControlCallback(this.options.controls);
+
+        if (controlsSafe && callbackSafe) {
             this._buildCtrls();
         }
     }
@@ -94,6 +98,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return isEmpty;
     }
+    function checkControlCallback(controls) {
+        var funcList = ['func', 'fn', 'callback'];
+
+        var _loop = function _loop(key) {
+            var control = controls[key];
+            var matchInControl = false;
+
+            funcList.forEach(function (alias) {
+                if (control.hasOwnProperty(alias)) {
+                    matchInControl = true;
+                }
+            });
+
+            if (!matchInControl) {
+                throw new ReferenceError('No callback was passed with the "' + key + '" object. Pass "func", "fn", or "callback" property in this control object');
+            }
+        };
+
+        for (var key in controls) {
+            _loop(key);
+        }
+        return true;
+    }
     /**
      * @method
      */
@@ -107,12 +134,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         $.extend(true, plugin.controls, plugin.options.controls);
 
         for (var key in plugin.controls) {
-            var control = plugin.controls[key];
+            var _control = plugin.controls[key];
             var capClass = capLabels ? 'proper-case' : '';
             var ctrlClass = isString(custCtrlClass) && !isEmpty(custCtrlClass) ? custCtrlClass : '';
-            var label = labelCheck(key, control);
-            var tag = checkTag(control.tag);
-            var custAtts = $.isPlainObject(control.attr) ? control.attr : {};
+            var label = labelCheck(key, _control);
+            var tag = checkTag(_control.tag);
+            var custAtts = $.isPlainObject(_control.attr) ? _control.attr : {};
             var defAtts = {
                 class: 'viewctrl ' + capClass + ' ' + ctrlClass,
                 // title: key
@@ -122,11 +149,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var ctrlAtts = mergeAtts(defAtts, custAtts);
             var ctrl = $('<' + tag + '>', ctrlAtts);
 
-            var iconEl = checkIcon(control.icon);
+            var iconEl = checkIcon(_control.icon);
             if (iconEl !== null) {
                 ctrl.append(iconEl);
             }
-            addListener(ctrl, control);
+            addListener(ctrl, _control);
             $btns = $btns.add(ctrl);
         }
         wrapper.html('').append($btns);
@@ -224,10 +251,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         checkForFunc(opts);
 
         var thisArg = !isEmpty(opts.thisArg) ? opts.thisArg : window;
-        var baseArg = [elem];
-        var args = !isEmpty(opts.args) ? baseArg.concat(opts.args) : baseArg;
 
-        $(elem).click(function viewctrlClkd() {
+        $(elem).click(function viewctrlClkd(event) {
+            var baseArg = [event];
+            var args = !isEmpty(opts.args) ? baseArg.concat(opts.args) : baseArg;
             opts.func.apply(thisArg, args);
         });
     }

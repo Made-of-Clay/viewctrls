@@ -27,6 +27,17 @@ describe('viewctrls', function () {
             expect(initNoCtrls.bind(vc)).to.throw(Error);
             done();
         });
+        it('should throw an error if no func property (or alias) is passed with control', function(done) {
+            var noFuncInit = function() {
+                vc.viewctrls({
+                    controls: {
+                        link: {}
+                    }
+                });
+            };
+            expect(noFuncInit.bind(vc)).to.throw(ReferenceError);
+            done();
+        });
     });
 
     describe('vc elem after throw tests', function () {
@@ -79,13 +90,23 @@ describe('viewctrls', function () {
             }
             expect(hasProps).to.be.true;
         });
-        it('should have control(s) with at least a "func" callback', function() {
-            var controls = vc.data('moc-viewctrls').options.controls;
+        // it('should have control(s) with at least a "func" callback', function() {
+        //     destroyVc();
+        //     vc.viewctrls({
+        //         controls: {
+        //             link: {}
+        //         }
+        //     });
+        //     var controls = vc.data('moc-viewctrls').controls;
+        //     var allHaveFunc = true;
 
-            for(cmd in controls) {
-                expect(controls[cmd].func).not.to.be.undefined;
-            }
-        });
+        //     for(var cmd in controls) {
+        //         if(!controls[cmd].hasOwnProperty('func')) {
+        //             allHaveFunc = false;
+        //         }
+        //     }
+        //     expect(allHaveFunc).to.be.true;
+        // });
     });
 
     describe('elements', function () {
@@ -225,11 +246,24 @@ describe('viewctrls', function () {
             firstCtrl.click(); // should add class
             expect(foo).to.equal(fooVal);
         });
+        it('should return click event object', function () {
+            var fooVal = 'bar';
+            initObj.controls.edit.func = function(event) {
+                if(event.hasOwnProperty('target')) {
+                    $(event.target).attr('data-foo', fooVal);
+                }
+            }
+            vc.viewctrls(initObj);
+            var firstCtrl = vc.find('.viewctrl').first();
+            firstCtrl.click(); // should add class
+            expect(firstCtrl.data('foo')).to.equal(fooVal);
+        })
         it('should set data-foo on clicked element using foo property (baz)', function() {
             var fooVal = 'bar';
             var obj = {
                 foo: 'baz',
-                setFoo: function(elem) { 
+                setFoo: function(evt) { 
+                    var elem = $(evt.target);
                     elem.attr('data-foo', this.foo);
                 }
             };
@@ -243,7 +277,8 @@ describe('viewctrls', function () {
         });
         it('should use passed argument in callback function (data-foo = fooArg)', function () {
             var argFoo = 'bar';
-            initObj.controls.edit.func = function(elem, foo) {
+            initObj.controls.edit.func = function(evt, foo) {
+                var elem = $(evt.target);
                 elem.attr('data-foo', foo);
             };
             initObj.controls.edit.args = [argFoo];
@@ -256,7 +291,8 @@ describe('viewctrls', function () {
         it('should accept the "callback" alias to "func"', function() {
             var fooVal = 'bar';
             initObj.controls.edit.func = null;
-            initObj.controls.edit.callback = function(elem) {
+            initObj.controls.edit.callback = function(evt) {
+                var elem = $(evt.target);
                 elem.attr('data-foo', fooVal);
             };
             vc.viewctrls(initObj);
@@ -268,7 +304,8 @@ describe('viewctrls', function () {
         it('should accept the "fn" alias to "func"', function() {
             var fooVal = 'bar';
             initObj.controls.edit.func = null;
-            initObj.controls.edit.fn = function(elem) {
+            initObj.controls.edit.fn = function(evt) {
+                var elem = $(evt.target);
                 elem.attr('data-foo', fooVal);
             };
             vc.viewctrls(initObj);
