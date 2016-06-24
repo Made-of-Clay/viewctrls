@@ -30,7 +30,7 @@
     }
     &:hover {
         background-color: white;
-        z-index: 1; // so hover labels don't trump each other
+        // z-index: 1; // so hover labels don't trump each other
     }
     &.proper-case {
         text-transform: capitalize;
@@ -40,15 +40,17 @@
     @at-root {
         %vc-btn {
             color: #ccc;
-            display: block;
-            opacity: 0;
+            display: none;
+            // display: block;
+            // opacity: 0;
             position: absolute;
             text-shadow: 1px 1px 0 solid;
             transition: opacity 0.3s;
         }
         %vc-hover-btn {
             &:hover {
-                opacity: 1;
+                display: block;
+                // opacity: 1;
             }
         }
     }
