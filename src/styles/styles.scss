@@ -30,6 +30,7 @@
     }
     &:hover {
         background-color: white;
+        z-index: 1; // so hover labels don't trump each other
     }
     &.proper-case {
         text-transform: capitalize;
