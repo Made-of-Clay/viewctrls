@@ -264,9 +264,8 @@
     }
 
     function _destroy() {
-        this.element
-            .removeClass('viewctrls')
-            .html('')
+        this.element.removeClass('viewctrls')
+            .children('.viewctrls-wrapper').remove()
         ;
     }
 
