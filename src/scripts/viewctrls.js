@@ -264,9 +264,11 @@
     }
 
     function _destroy() {
-        this.element.removeClass('viewctrls')
+        this.element
+            .removeClass('viewctrls')
             .children('.viewctrls-wrapper').remove()
         ;
+        this.options.controls = {};
     }
 
     // Utility Functions

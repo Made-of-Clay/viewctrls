@@ -276,6 +276,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     function _destroy() {
         this.element.removeClass('viewctrls').children('.viewctrls-wrapper').remove();
+        this.options.controls = {};
     }
 
     // Utility Functions
